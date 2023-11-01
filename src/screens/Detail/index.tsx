@@ -5,7 +5,7 @@ import data from '../../../Zodiac';
 import {Text} from 'react-native-paper';
 
 const Detail = () => {
-  const signData = data.ZodiacSignsDetail[7];
+  const signData = data.ZodiacSignsDetail[11];
 
   return (
     <View style={styles.flex}>
@@ -17,6 +17,8 @@ const Detail = () => {
           style={styles.bg}
           contentContainerStyle={styles.bgContainer}
           showsVerticalScrollIndicator={false}>
+          <View>{signData.ZodiacSignImageUrl}</View>
+
           <Text variant="titleLarge">{signData.Name}</Text>
           <Text variant="titleMedium">
             Myanmar Month: <Text> {signData.MyanmarMonth}</Text>

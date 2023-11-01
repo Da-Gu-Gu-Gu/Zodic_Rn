@@ -7,16 +7,29 @@ import {Text, Card} from 'react-native-paper';
 const Home = () => {
   const _renderItem = useCallback(({item}) => {
     return (
-      <Card style={{width: '30%', height: 120, padding: 8}}>
-        <Image
-          source={item.ZodiacSign2ImageUrl}
+      <Card
+        style={{
+          width: '30%',
+          paddingVertical: 10,
+          justifyContent: 'center',
+          // gap: 10,
+          alignItems: 'center',
+        }}>
+        <View
           style={{
-            width: '100%',
-            height: '100%',
-            borderRadius: 10,
-            resizeMode: 'contain',
-          }}
-        />
+            marginBottom: 10,
+            width: 75,
+            height: 75,
+            justifyContent: 'center',
+            borderRadius: 15,
+            backgroundColor: 'rgba(0,0,0,0.4)',
+            alignItems: 'center',
+          }}>
+          {item.ZodiacSignImageUrl}
+        </View>
+        <Text variant="bodySmall" style={{textAlign: 'center'}}>
+          {item.Name}
+        </Text>
       </Card>
     );
   }, []);
@@ -31,6 +44,7 @@ const Home = () => {
         <Text variant="headlineSmall">Headline Large</Text>
         <Text variant="titleSmall">Signs</Text>
         <FlatList
+          style={{marginVertical: 20}}
           data={data.ZodiacSignsDetail}
           renderItem={_renderItem}
           contentContainerStyle={{gap: 20}}
