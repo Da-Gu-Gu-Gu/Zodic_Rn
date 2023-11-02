@@ -6,45 +6,40 @@ import {
   Button,
   TouchableOpacity,
 } from 'react-native';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import data from '../../../Zodiac';
 import Header from '../../components/Header';
 import {Text, Card} from 'react-native-paper';
 import DatePicker from 'react-native-date-picker';
+import getZodiac from '../../utils/getZodiac';
 
 const Home = () => {
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
 
-  const _renderItem = useCallback(({item}) => {
-    return (
-      <Card
-        style={{
-          width: '30%',
-          paddingVertical: 10,
-          justifyContent: 'center',
-          backgroundColor: '#090c08',
-          alignItems: 'center',
-        }}>
-        <View
-          style={{
-            marginBottom: 10,
-            width: 75,
-            height: 75,
-            justifyContent: 'center',
-            borderRadius: 15,
-            backgroundColor: '#fbff12',
+  const yourZodiac = useMemo(() => (date ? getZodiac(date) : null), [date]);
 
-            alignItems: 'center',
-          }}>
-          {item.ZodiacSignImageUrl}
-        </View>
-        <Text variant="bodySmall" style={{textAlign: 'center', color: 'white'}}>
-          {item.Name}
-        </Text>
-      </Card>
-    );
-  }, []);
+  const _renderItem = useCallback(
+    ({item}: any) => {
+      return (
+        <Card
+          style={[
+            styles.card,
+            {
+              borderColor: item.Name === yourZodiac ? '#fbff12' : '#090c08',
+            },
+          ]}>
+          <View style={styles.imgWrapper}>{item.ZodiacSignImageUrl}</View>
+          <Text
+            variant="bodySmall"
+            style={{textAlign: 'center', color: 'white'}}>
+            {item.Name}
+          </Text>
+        </Card>
+      );
+    },
+    [date],
+  );
 
   const _keyExtractor = useCallback(item => item.Id, []);
 
@@ -66,22 +61,22 @@ const Home = () => {
         <Text variant="titleMedium" style={{color: 'white'}}>
           If you don't know your sign, just enter your birthday.
         </Text>
-        <TouchableOpacity
-          style={{
-            borderWidth: 2,
-            paddingVertical: 10,
-            borderRadius: 10,
-            alignItems: 'center',
-            borderColor: 'gray',
-            marginVertical: 15,
-          }}
-          onPress={() => setOpen(true)}>
+        <TouchableOpacity style={styles.btn} onPress={() => setOpen(true)}>
           <Text style={{color: '#fbff12'}}>Pick Date</Text>
         </TouchableOpacity>
+        {yourZodiac && (
+          <Text
+            variant="titleMedium"
+            style={{color: 'white', marginVertical: 20}}>
+            Your Zodiac sign is{' '}
+            <Text style={{color: '#fbff12'}}> {yourZodiac}</Text>
+          </Text>
+        )}
         <Text variant="titleSmall" style={{color: 'white'}}>
           Signs
         </Text>
         <FlatList
+          showsVerticalScrollIndicator={false}
           style={{marginTop: 20, flexGrow: 1}}
           data={data.ZodiacSignsDetail}
           renderItem={_renderItem}
@@ -119,5 +114,31 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     gap: 10,
+  },
+  card: {
+    width: '30%',
+    borderWidth: 2,
+    paddingVertical: 10,
+    justifyContent: 'center',
+    backgroundColor: '#090c08',
+    alignItems: 'center',
+  },
+  imgWrapper: {
+    marginBottom: 10,
+    width: 75,
+    height: 75,
+    justifyContent: 'center',
+    borderRadius: 15,
+    backgroundColor: '#fbff12',
+
+    alignItems: 'center',
+  },
+  btn: {
+    borderWidth: 2,
+    paddingVertical: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    borderColor: 'gray',
+    marginVertical: 15,
   },
 });
