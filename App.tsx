@@ -9,8 +9,8 @@ const App = () => {
     <PaperProvider>
       <SafeAreaView style={{flex: 1}}>
         {/* <Text>App</Text> */}
-        {/* <Home /> */}
-        <Detail />
+        <Home />
+        {/* <Detail /> */}
       </SafeAreaView>
     </PaperProvider>
   );
