@@ -12,10 +12,12 @@ import Header from '../../components/Header';
 import {Text, Card} from 'react-native-paper';
 import DatePicker from 'react-native-date-picker';
 import getZodiac from '../../utils/getZodiac';
+import {useNavigation} from '@react-navigation/native';
 
 const Home = () => {
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(null);
   const [open, setOpen] = useState(false);
+  const navigation = useNavigation();
 
   const yourZodiac = useMemo(() => (date ? getZodiac(date) : null), [date]);
 
@@ -23,6 +25,11 @@ const Home = () => {
     ({item}: any) => {
       return (
         <Card
+          onPress={() =>
+            navigation.navigate('Detail', {
+              signData: item,
+            })
+          }
           style={[
             styles.card,
             {
@@ -89,7 +96,7 @@ const Home = () => {
           modal
           open={open}
           mode="date"
-          date={date}
+          date={date ?? new Date()}
           onConfirm={date => {
             setOpen(false);
             setDate(date);

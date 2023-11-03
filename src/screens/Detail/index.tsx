@@ -5,14 +5,18 @@ import {
   View,
   Alert,
 } from 'react-native';
-import React from 'react';
-import Header from '../../components/Header';
+import React, {useState} from 'react';
+import Header, {BackHeader} from '../../components/Header';
 import data from '../../../Zodiac';
 import {Text} from 'react-native-paper';
 import {PieChart} from 'react-native-gifted-charts';
+import {useRoute} from '@react-navigation/native';
 
 const Detail = () => {
-  const signData = data.ZodiacSignsDetail[1];
+  const route = useRoute();
+  const {signData} = route.params;
+
+  const [currentChartData, setCurrentChartData] = useState(null);
 
   const traitsData = signData.Traits.map(data => {
     return {
@@ -24,7 +28,7 @@ const Detail = () => {
 
   return (
     <View style={styles.flex}>
-      <Header />
+      <BackHeader />
       <ImageBackground
         source={signData.ZodiacSign2ImageUrl}
         style={styles.container}>
@@ -85,38 +89,42 @@ const Detail = () => {
             <Text variant="titleMedium" style={styles.underline}>
               Traits
             </Text>
-            <PieChart
-              data={traitsData}
-              donut
-              showGradient
-              focusOnPress
-              showValuesAsLabels
-              showTextBackground
-              radius={130}
-              onPress={(item: any, index: any) =>
-                Alert.alert(JSON.stringify(item))
-              }
-              innerRadius={90}
-              innerCircleColor={'#232B5D'}
-              centerLabelComponent={(_item: any) => {
-                return (
-                  <View
-                    style={{justifyContent: 'center', alignItems: 'center'}}>
-                    <Text
-                      style={{
-                        fontSize: 22,
-                        color: 'white',
-                        fontWeight: 'bold',
-                      }}>
-                      {/* {item.value} */}
-                    </Text>
-                    <Text style={{fontSize: 14, color: 'white'}}>
-                      Excellent
-                    </Text>
-                  </View>
-                );
-              }}
-            />
+            <View style={{alignSelf: 'center', marginTop: 10}}>
+              <PieChart
+                data={traitsData}
+                donut
+                showGradient
+                focusOnPress
+                showValuesAsLabels
+                showTextBackground
+                radius={130}
+                onPress={(item: any, index: any) => setCurrentChartData(item)}
+                innerRadius={90}
+                innerCircleColor={'#232B5D'}
+                centerLabelComponent={(_item: any) => {
+                  return (
+                    <View
+                      style={{justifyContent: 'center', alignItems: 'center'}}>
+                      {currentChartData && (
+                        <>
+                          <Text
+                            style={{
+                              fontSize: 22,
+                              color: 'white',
+                              fontWeight: 'bold',
+                            }}>
+                            {currentChartData?.value} %
+                          </Text>
+                          <Text style={{fontSize: 14, color: 'white'}}>
+                            {currentChartData?.label}
+                          </Text>
+                        </>
+                      )}
+                    </View>
+                  );
+                }}
+              />
+            </View>
           </View>
         </ScrollView>
       </ImageBackground>
@@ -129,6 +137,7 @@ export default Detail;
 const styles = StyleSheet.create({
   flex: {
     flex: 1,
+    backgroundColor: '#161a1d',
   },
   container: {
     margin: 10,
